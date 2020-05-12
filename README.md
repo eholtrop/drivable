@@ -9,7 +9,11 @@ When using Rx in an Android application with a MVVM pattern. But one of the stru
 I found two strategies that worked well. but they both had their pros and cons
 
 1. Pass view actions via an interface
+- while this works well. it requires some sort of "initialization" function on the viewmodel (after the views themselves have been intiialized). meaning things like null pointer exceptions are possible if the viewmodel isnt properly initialized before subscribing to outputs
+- a view model should almost be a "state machine" ie. "given these inputs. I will give these outputs". having objects build themselves without dependencies is a great goal to strive for
+
 2. Use subjects internally in the ViewModel to propogate events
+- this seems to solve most of the issues with pt 1. but it exposes another extremely dangerous effect. you expose your inputs as subjects. meaning anything can "onNext" your inputs. which removes the beauty of RxJava. wherein you have single inputs which directly map to inputs.
 
 Enter Drivable!
 
@@ -77,3 +81,7 @@ ViewModel:
         .filter { it }
 
 This allows for easy binding within your views. **as well as** ensuring taht your viewModel is not exposing any nasty subjects publically.
+
+Drivable also has some hidden benefits.
+
+Drivables are only subscribed to when subscribe is called on the Drivable itself. meaning no unnecessary subscriptions are created when all you are doing is simple binding to an input. your only create subscriptions when you actually use the output values! (which means less disposable management... which we all want)
