@@ -11,7 +11,8 @@ class Drivable<T> : Observable<T>() {
     private val observers = mutableListOf<Observer<in T>>()
     private val sourceDisposables = CompositeDisposable()
 
-    fun drive(source: Observable<T>): Observable<T> {
+    @Synchronized
+    internal fun driveWith(source: Observable<T>): Observable<T> {
         sourceDisposables.clear()
         this.source = source
         observers.forEach { obs ->
@@ -28,12 +29,12 @@ class Drivable<T> : Observable<T>() {
     }
 
     private fun bind(observer: Observer<in T>, source: Observable<T>) {
-        val disposable = source.subscribe({ observer.onNext(it) }, { it.printStackTrace() })
+        val disposable = source.subscribe({ observer.onNext(it) }, { observer.onError(it) }, { observer.onComplete() })
         observer.onSubscribe(disposable)
         sourceDisposables.add(disposable)
     }
 }
 
 fun <T> Observable<T>.drive(drivable: Drivable<T>): Observable<T> {
-    return drivable.drive(this)
+    return drivable.driveWith(this)
 }
