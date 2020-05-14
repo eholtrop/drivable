@@ -1,6 +1,26 @@
 Drivable
 ========
 
+Gradle
+------
+[![](https://jitpack.io/v/eholtrop/drivable.svg)](https://jitpack.io/#eholtrop/drivable)
+
+Project build.gradle
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+Module build.gradle
+```
+dependencies {
+        implementation 'com.github.eholtrop:drivable:x.y.z'
+}
+```
+
 Why
 ---
 
