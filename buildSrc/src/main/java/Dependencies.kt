@@ -6,9 +6,9 @@ object Versions {
 }
 
 object Config {
-    val Gradle = "com.android.tools.build:gradle:3.6.1"
+    val Gradle = "com.android.tools.build:gradle:3.6.3"
     val Kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin}"
-    val GoogleServices = "com.google.gms:google-services:4.3.3"
+    val MavenPublish = "com.github.dcendents:android-maven-gradle-plugin:1.5"
     val VersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
 
     val MinSdk = 24
