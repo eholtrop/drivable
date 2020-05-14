@@ -1,5 +1,7 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.eholtrop'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -11,12 +13,11 @@ dependencies {
 sourceCompatibility = "7"
 targetCompatibility = "7"
 buildscript {
-    ext.kotlin_version = '1.3.61'
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath Config.Kotlin
     }
 }
 repositories {
