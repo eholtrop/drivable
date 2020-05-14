@@ -5,6 +5,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation Dependencies.RxJava
     implementation Dependencies.KotlinJDK
+    implementation Dependencies.junit
 }
 
 sourceCompatibility = "7"

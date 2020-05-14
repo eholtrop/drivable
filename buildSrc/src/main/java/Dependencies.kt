@@ -38,4 +38,5 @@ object Dependencies {
     val RxJava3 = "io.reactivex.rxjava3:rxjava:3.0.0"
     val RxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     val RxKotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
+    val junit = "junit:junit:4.12"
 }
