@@ -41,44 +41,6 @@ Drivable allows the view to "drive" observables within the viewmodel. without an
 
 ex.
 
-Activity:
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-
-        binding.email.textChanges()
-            .drive(viewModel.input.email)
-
-        binding.password.textChanges()
-            .drive(viewModel.input.password)
-
-        binding.login.clicks()
-            .drive(viewModel.input.loginClicked)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        disposeBag.add(
-            viewModel.emailError
-                .observeOn(AndroidSchedulers.mainThread()) //required due to bug in RxBinding
-                .subscribe { binding.email.error = it }
-        )
-
-        disposeBag.add(
-            viewModel.passwordError
-                .observeOn(AndroidSchedulers.mainThread()) //required due to bug in RxBinding
-                .subscribe { binding.password.error = it }
-        )
-
-        disposeBag.add(
-            viewModel.loginSuccessful
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show() }
-        )
-    }
-
 ViewModel:
 
     val input = Input()
@@ -99,6 +61,44 @@ ViewModel:
             return@withLatestFrom (email.isNotBlank() || password.isNotBlank())
         }
         .filter { it }
+
+Activity (uses [RxBinding](https://github.com/JakeWharton/RxBinding) for view events)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
+        binding.email.textChanges()
+            .drive(viewModel.input.email)
+
+        binding.password.textChanges()
+            .drive(viewModel.input.password)
+
+        binding.login.clicks()
+            .drive(viewModel.input.loginClicked)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        disposeBag.add(
+            viewModel.emailError
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { binding.email.error = it }
+        )
+
+        disposeBag.add(
+            viewModel.passwordError
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { binding.password.error = it }
+        )
+
+        disposeBag.add(
+            viewModel.loginSuccessful
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show() }
+        )
+    }
 
 This allows for easy binding within your views. **as well as** ensuring taht your viewModel is not exposing any nasty subjects publically.
 
