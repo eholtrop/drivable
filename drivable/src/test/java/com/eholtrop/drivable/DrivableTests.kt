@@ -4,6 +4,7 @@ import com.avianapps.drivable.Drivable
 import com.avianapps.drivable.drive
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import junit.framework.Assert.assertTrue
 import org.junit.Test
@@ -113,6 +114,34 @@ class DrivableTests {
 
         drivable.test().assertValues(Unit, Unit)
         drivable.test().assertValues(Unit, Unit)
+    }
+
+    @Test
+    fun driveAfterMultipleSubscriptions_NoCrash() {
+        val driver = PublishSubject.create<Unit>()
+
+        val drivable = Drivable<Unit>()
+
+        drivable.subscribe()
+        drivable.subscribe()
+        drivable.subscribe()
+
+        driver.drive(drivable)
+    }
+
+    @Test
+    fun driveBeforeAndAfterMultipleSubscriptions_NoCrash() {
+        val driver = PublishSubject.create<Unit>()
+
+        val drivable = Drivable<Unit>()
+
+        driver.drive(drivable)
+
+        drivable.subscribe()
+
+        driver.drive(drivable)
+
+        assertTrue(!driver.hasObservers())
     }
 
 }

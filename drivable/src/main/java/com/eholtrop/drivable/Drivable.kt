@@ -55,7 +55,16 @@ class Drivable<T> : Observable<T>() {
      * add subscription to the disposable list incase early cleanup is required
      */
     private fun bind(observer: Observer<in T>, driver: Observable<T>) {
-        val disposable = driver.subscribe({ observer.onNext(it) }, { observer.onError(it) }, { observer.onComplete() })
+        val disposable = driver
+            .doOnDispose { observers.remove(observer) }
+            .subscribe({ observer.onNext(it) }, {
+                observer.onError(it)
+                observers.remove(observer)
+            }, {
+                observer.onComplete()
+                observers.remove(observer)
+
+            })
         observer.onSubscribe(disposable)
         sourceDisposables.add(disposable)
     }
