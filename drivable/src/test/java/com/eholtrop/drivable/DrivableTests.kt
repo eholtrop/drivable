@@ -141,7 +141,7 @@ class DrivableTests {
 
         driver.drive(drivable)
 
-        assertTrue(!driver.hasObservers())
+        assertTrue(driver.hasObservers())
     }
 
 }

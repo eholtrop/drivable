@@ -3,6 +3,9 @@ package com.avianapps.drivable
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Drivable
@@ -18,10 +21,21 @@ import io.reactivex.disposables.CompositeDisposable
  * will be created
  */
 
+class IdObserver<T>(
+    val id: String = UUID.randomUUID().toString(),
+    val observer: Observer<T>
+) {
+    override fun equals(other: Any?): Boolean {
+        return when (other) {
+            is IdObserver<*> -> this.id == other.id
+            else -> false
+        }
+    }
+}
+
 class Drivable<T> : Observable<T>() {
     private var driver: Observable<T>? = null
-    private val observers = mutableListOf<Observer<in T>>()
-    private val sourceDisposables = CompositeDisposable()
+    private val sourceDisposables = hashMapOf<Observer<in T>, List<Disposable>>()
 
     /**
      * Drive the drivable with a given observable driver. if observers exist create the necessary
@@ -32,7 +46,7 @@ class Drivable<T> : Observable<T>() {
     @Synchronized
     internal fun driveWith(driver: Observable<T>): Observable<T> {
         this.driver = driver
-        observers.forEach { obs ->
+        sourceDisposables.keys.forEach { obs ->
             bind(obs, driver)
         }
         return driver
@@ -42,9 +56,8 @@ class Drivable<T> : Observable<T>() {
      * on subscribe add observer to observer list. if driver is non-null bind observer/driver subscription
      */
     override fun subscribeActual(observer: Observer<in T>) {
-        observers.add(observer)
         driver?.let {
-            bind(observer, it)
+            observer.onSubscribe(bind(observer, it))
         }
     }
 
@@ -53,20 +66,27 @@ class Drivable<T> : Observable<T>() {
      * bind this subscription to the observer onSubscribe lifecycle
      * add subscription to the disposable list incase early cleanup is required
      */
-    private fun bind(observer: Observer<in T>, driver: Observable<T>) {
+    private fun bind(observer: Observer<in T>, driver: Observable<T>): Disposable {
         val disposable = driver
-            .doOnDispose { observers.remove(observer) }
+            .doOnDispose { cleanObserver(observer) }
             .subscribe(
                 { observer.onNext(it) }, {
                     observer.onError(it)
-                    observers.remove(observer)
+                    cleanObserver(observer)
                 }, {
                     observer.onComplete()
-                    observers.remove(observer)
+                    cleanObserver(observer)
 
                 })
-        observer.onSubscribe(disposable)
-        sourceDisposables.add(disposable)
+
+        sourceDisposables[observer] =
+            (sourceDisposables[observer] ?: emptyList()) + listOf(disposable)
+        return disposable
+    }
+
+    private fun cleanObserver(observer: Observer<in T>) {
+        sourceDisposables[observer]?.filter { !it.isDisposed }?.forEach { it.dispose() }
+        sourceDisposables.remove(observer)
     }
 }
 
