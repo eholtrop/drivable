@@ -31,7 +31,6 @@ class Drivable<T> : Observable<T>() {
      */
     @Synchronized
     internal fun driveWith(driver: Observable<T>): Observable<T> {
-        sourceDisposables.clear()
         this.driver = driver
         observers.forEach { obs ->
             bind(obs, driver)
@@ -57,14 +56,15 @@ class Drivable<T> : Observable<T>() {
     private fun bind(observer: Observer<in T>, driver: Observable<T>) {
         val disposable = driver
             .doOnDispose { observers.remove(observer) }
-            .subscribe({ observer.onNext(it) }, {
-                observer.onError(it)
-                observers.remove(observer)
-            }, {
-                observer.onComplete()
-                observers.remove(observer)
+            .subscribe(
+                { observer.onNext(it) }, {
+                    observer.onError(it)
+                    observers.remove(observer)
+                }, {
+                    observer.onComplete()
+                    observers.remove(observer)
 
-            })
+                })
         observer.onSubscribe(disposable)
         sourceDisposables.add(disposable)
     }
