@@ -56,6 +56,9 @@ class Drivable<T> : Observable<T>() {
      * on subscribe add observer to observer list. if driver is non-null bind observer/driver subscription
      */
     override fun subscribeActual(observer: Observer<in T>) {
+        if(!sourceDisposables.containsKey(observer)) {
+            sourceDisposables[observer] = emptyList()
+        }
         driver?.let {
             observer.onSubscribe(bind(observer, it))
         }
