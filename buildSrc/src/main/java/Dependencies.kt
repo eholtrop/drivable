@@ -23,20 +23,11 @@ object Dependencies {
 
     const val KotlinJDK = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.Kotlin}"
 
-    const val RxBindingAppCompat = "com.jakewharton.rxbinding3:rxbinding-appcompat:3.1.0"
+    const val RxBindingAppCompat = "com.jakewharton.rxbinding4:rxbinding-appcompat:4.0.0"
 
     const val AndroidXAppCompat = "androidx.appcompat:appcompat:1.1.0"
-    const val AndroidXKtx = "androidx.core:core-ktx:1.0.2"
-    const val AndroidXConstraintLayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta4"
-    const val AndroidXMaterial = "com.google.android.material:material:1.2.0-alpha05"
-    const val AndroidXLegacySupport = "androidx.legacy:legacy-support-v4:1.0.0"
-    const val AndroidXRecyclerView = "androidx.recyclerview:recyclerview:1.2.0-alpha02"
-    const val AndroidXCardView = "androidx.cardview:cardview:1.0.0"
-    const val ViewPager2 = "androidx.viewpager2:viewpager2:1.0.0"
 
-    const val RxJava = "io.reactivex.rxjava2:rxjava:2.2.10"
-    const val RxJava3 = "io.reactivex.rxjava3:rxjava:3.0.0"
-    const val RxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
-    const val RxKotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
+    const val RxJava = "io.reactivex.rxjava3:rxjava:3.0.0"
+    const val RxKotlin = "io.reactivex.rxjava3:rxkotlin:3.0.1"
     const val junit = "junit:junit:4.12"
 }

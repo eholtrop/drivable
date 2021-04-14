@@ -33,6 +33,7 @@ dependencies {
     implementation project(':drivable')
     implementation Dependencies.KotlinJDK
     implementation Dependencies.AndroidXAppCompat
+    implementation Dependencies.RxJava
     implementation Dependencies.RxKotlin
     implementation Dependencies.RxBindingAppCompat
 }

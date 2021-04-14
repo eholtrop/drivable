@@ -1,8 +1,9 @@
-package com.avianapps.drivable
+package com.eholtrop.drivable
 
-import io.reactivex.Observable
-import io.reactivex.Observer
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+
 
 /**
  * Drivable
