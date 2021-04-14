@@ -1,8 +1,7 @@
 package com.eholtrop.sample
 
-import android.util.Log
-import com.avianapps.drivable.Drivable
-import io.reactivex.rxkotlin.withLatestFrom
+import com.eholtrop.drivable.Drivable
+import io.reactivex.rxjava3.kotlin.withLatestFrom
 
 class LoginViewModel {
 
@@ -16,13 +15,14 @@ class LoginViewModel {
 
     val emailError = input.email.map { if (it.isNullOrBlank()) "Enter an email" else "" }
 
-    val passwordError = input.password.map { if (it.isNullOrBlank()) "Enter a valid password" else "" }
+    val passwordError =
+        input.password.map { if (it.isNullOrBlank()) "Enter a valid password" else "" }
 
     val loginSuccessful = input.loginClicked
-        .doOnNext { Log.d("Debug", "test") }
-        .withLatestFrom(input.email, input.password) { _, email, password ->
-            return@withLatestFrom (email.isNotBlank() || password.isNotBlank())
-        }
+        .withLatestFrom(
+            input.email,
+            input.password
+        ) { _, email, password -> (email.isNotBlank() || password.isNotBlank()) }
         .filter { it }
 
 }
